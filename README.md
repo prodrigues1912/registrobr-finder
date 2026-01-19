@@ -1,6 +1,6 @@
 # registrobr-finder
 
-Ferramenta de linha de comando para verificar disponibilidade de domínios `.br` usando a API RDAP do Registro.br.
+Ferramenta de linha de comando para verificar disponibilidade de domínios `.br` usando a API do Registro.br.
 
 Escrito em Rust para máxima performance, com suporte a requisições paralelas assíncronas.
 
@@ -84,6 +84,9 @@ mise exec -- cargo build --release
 # Verificar domínios .net.br
 ./target/release/registrobr-finder -d 2 --suffix .net.br
 
+# Verificar domínios .dev.br
+./target/release/registrobr-finder -d 3 --letters --suffix .dev.br
+
 # Verificar domínios .org.br
 ./target/release/registrobr-finder -d 2 --suffix .org.br
 ```
@@ -91,7 +94,7 @@ mise exec -- cargo build --release
 ### Salvar resultados em arquivo
 
 ```bash
-./target/release/registrobr-finder -d 2 -o disponiveis.txt
+./target/release/registrobr-finder -d 3 --letters -o disponiveis.txt
 ```
 
 ### Ajustar performance
@@ -128,10 +131,13 @@ mise exec -- cargo build --release
 ## Como funciona
 
 1. O programa gera todas as combinações possíveis de caracteres com o tamanho especificado
-2. Para cada combinação, faz uma requisição à API RDAP do Registro.br (`https://rdap.registro.br/domain/`)
-3. Se a API retorna HTTP 404, o domínio está **disponível**
-4. Se a API retorna HTTP 200, o domínio está **registrado**
-5. Os resultados são exibidos em tempo real com uma barra de progresso
+2. Para cada combinação, faz uma requisição à API de disponibilidade do Registro.br
+3. A API retorna um status indicando:
+   - `0` = domínio **disponível**
+   - `2` = domínio **registrado** (inclui data de expiração)
+   - `3` = domínio **em processo**
+   - `4` = domínio **indisponível**
+4. Os resultados são exibidos em tempo real com uma barra de progresso
 
 ## Rate Limiting
 
@@ -142,4 +148,4 @@ O Registro.br pode aplicar rate limiting se você fizer muitas requisições em 
 
 ## Licença
 
-MIT
+MIT - veja [LICENSE](LICENSE) para detalhes.
